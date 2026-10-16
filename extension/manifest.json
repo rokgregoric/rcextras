@@ -1,0 +1,77 @@
+{
+  "manifest_version": 3,
+  "name": "RC Extras",
+  "short_name": "RC Extras",
+  "version": "1.1",
+  "description": "Unofficial RevenueCat dashboard add-on: compact projects, renews or expires, more transactions, your currency, running totals.",
+  "homepage_url": "https://rcextras.akro-in.si",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "RC Extras",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png"
+    }
+  },
+  "options_ui": {
+    "page": "popup.html",
+    "open_in_tab": false
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://app.revenuecat.com/*"
+      ],
+      "js": [
+        "main.js"
+      ],
+      "world": "MAIN",
+      "run_at": "document_start"
+    },
+    {
+      "matches": [
+        "https://app.revenuecat.com/*"
+      ],
+      "js": [
+        "sync.js"
+      ],
+      "run_at": "document_start"
+    },
+    {
+      "matches": [
+        "https://app.revenuecat.com/*"
+      ],
+      "js": [
+        "rcx.js",
+        "content.js",
+        "transactions.js",
+        "currency.js",
+        "overview.js",
+        "trials.js"
+      ],
+      "css": [
+        "content.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "https://www.google.com/s2/favicons*",
+    "https://*.gstatic.com/*",
+    "https://api.frankfurter.dev/*"
+  ],
+  "optional_host_permissions": [
+    "https://*/*"
+  ]
+}

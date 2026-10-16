@@ -1,0 +1,20 @@
+name: Feature request
+description: Suggest something RC Extras could add to the RevenueCat dashboard
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like?
+      description: The page in the RevenueCat dashboard and what you'd want to change there.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why would it help?
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: Screenshot (optional)
+      description: Paste or drag one in. Please hide any revenue numbers you don't want public.

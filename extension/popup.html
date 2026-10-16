@@ -1,0 +1,92 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>RC Extras</title>
+<style>
+  /* Follows the system theme (data-theme on <html> overrides it, used for screenshots). */
+  :root {
+    color-scheme: light; --bg: #ffffff; --text: #16161a; --line: #dedee4; --muted: #6b6b76; --field: #f4f4f6;
+    --off: #cfcfd6; --accent: #f2545b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { color-scheme: dark; --bg: #1e1e1e; --text: #eeeeee; --line: #333333; --muted: #8a8a8a; --field: #151515; --off: #444444; }
+  }
+  :root[data-theme="dark"] { color-scheme: dark; --bg: #1e1e1e; --text: #eeeeee; --line: #333333; --muted: #8a8a8a; --field: #151515; --off: #444444; }
+  body { margin: 0; width: 300px; font: 13px system-ui, sans-serif; background: var(--bg); color: var(--text); }
+  section { padding: 14px 16px; border-bottom: 1px solid var(--line); }
+  h2 { margin: 0 0 10px; font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .val { color: var(--accent); font-variant-numeric: tabular-nums; }
+  input[type=range] {
+    appearance: none; width: 100%; height: 6px; margin: 6px 0; border-radius: 3px; cursor: pointer;
+    background: linear-gradient(var(--accent), var(--accent)) no-repeat var(--off);
+    background-size: var(--fill, 50%) 100%;
+  }
+  input[type=range]::-webkit-slider-thumb { appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--accent); border: 2px solid var(--bg); }
+  .ends { display: flex; justify-content: space-between; margin-top: 4px; font-size: 11px; color: var(--muted); }
+  .row { display: grid; grid-template-columns: 1fr 1.3fr 18px; gap: 8px; align-items: center; margin-bottom: 8px; }
+  .row select { max-width: none; width: 100%; }
+  .remove { padding: 0; border: 0; background: none; color: var(--muted); font-size: 16px; line-height: 1; cursor: pointer; }
+  .remove:hover { color: var(--text); }
+  .add { padding: 2px 8px; border: 1px solid var(--line); border-radius: 6px; background: none; color: var(--accent); font: inherit; font-size: 12px; cursor: pointer; }
+  .add:hover { border-color: var(--accent); }
+  .head h2 { margin: 0; }
+  .row span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .row input { width: 100%; box-sizing: border-box; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--field); color: var(--text); font: inherit; }
+  .row input:focus { outline: none; border-color: var(--accent); }
+  .hint { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.4; }
+  .opt { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 10px; }
+  h2 + .opt { margin-top: 0; }
+  .opt small { display: block; color: var(--muted); font-size: 11px; margin-top: 2px; }
+  select {
+    appearance: none; padding: 5px 28px 5px 8px; border: 1px solid var(--line); border-radius: 6px; color: var(--text); font: inherit; max-width: 150px;
+    background: var(--field) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%238a8a8a' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 10px center;
+  }
+  select:focus { outline: none; border-color: var(--accent); }
+  .switch { appearance: none; flex: none; width: 32px; height: 18px; margin: 0; border-radius: 9px; background: var(--off); position: relative; cursor: pointer; transition: background .2s; }
+  .switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 14px; height: 14px; border-radius: 50%; background: #fff; transition: transform .2s; }
+  .switch:checked { background: var(--accent); }
+  .switch:checked::after { transform: translateX(14px); }
+  .pills { display: flex; flex: none; }
+  .pills button { padding: 4px 7px; border: 1px solid var(--line); background: var(--field); color: var(--muted); font: inherit; font-size: 12px; cursor: pointer; }
+  .pills button + button { border-left: 0; }
+  .pills button:first-child { border-radius: 6px 0 0 6px; }
+  .pills button:last-child { border-radius: 0 6px 6px 0; }
+  .pills button.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+  footer { padding: 10px 16px; font-size: 11px; color: var(--muted); }
+  footer a { color: var(--muted); }
+  footer p { margin: 8px 0 0; }
+  footer .request { color: var(--accent); font-size: 12px; font-weight: 600; text-decoration: none; }
+  footer .request:hover { text-decoration: underline; }
+</style>
+<section>
+  <div class="head"><h2>Icon size</h2><span class="val" id="val"></span></div>
+  <input type="range" id="size" min="16" max="44" step="2">
+  <div class="ends"><span>16 (original)</span><span>44</span></div>
+</section>
+<section>
+  <div class="head"><h2>Website icons</h2><button class="add" id="add" type="button">+ Add</button></div>
+  <div id="sites"></div>
+  <p class="hint" id="hint">Projects without an app icon get one from their Web Billing settings. Add a website to use its favicon instead.</p>
+</section>
+<section>
+  <h2>Dashboard</h2>
+  <label class="opt"><span>More transactions<small>"Load more" under All projects</small></span><input class="switch" type="checkbox" id="moreTransactions"></label>
+  <label class="opt"><span>Trial ends and renewals<small>Renews or expires in transactions; trial ends in customer lists</small></span><input class="switch" type="checkbox" id="trialEnds"></label>
+  <label class="opt"><span>Currency<small>Converts $ amounts (daily ECB rates)</small></span><select id="currency"></select></label>
+  <div class="opt"><span>Cumulative<small>Running totals, also via Σ on the cards</small></span>
+    <span class="pills" id="cumulativeCharts">
+      <button type="button" data-chart="revenue">Revenue</button><button type="button" data-chart="customers_new">New</button><button type="button" data-chart="customers_active">Active</button>
+    </span></div>
+  <label class="opt"><span>Revenue type<small>Default on the Overview</small></span>
+    <select id="revenueType">
+      <option value="Revenue">Revenue (gross)</option>
+      <option value="Revenue (net of taxes)">Net of taxes</option>
+      <option value="Proceeds">Proceeds (net)</option>
+    </select></label>
+  <label class="opt"><span>Sync projects<small>Order, hidden and default, across your Chrome</small></span><input class="switch" type="checkbox" id="syncProjects"></label>
+</section>
+<footer>
+  <a class="request" href="https://github.com/rokgregoric/rcextras/issues/new?template=feature_request.yml" target="_blank">Request a feature</a>
+  <p>Open source · unofficial, not affiliated with RevenueCat · <a href="https://rcextras.akro-in.si" target="_blank">rcextras.akro-in.si</a></p>
+</footer>
+<script src="popup.js"></script>

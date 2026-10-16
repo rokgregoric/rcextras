@@ -1,0 +1,120 @@
+/* One knob: icon size (set live from the popup slider via content.js).
+   Chip = icon + 4px padding each side (min RC's original 32px); All projects and
+   "N more projects" match. */
+:root {
+  --rcio-icon: 36px;
+  --rcio-icon-radius: calc(var(--rcio-icon) / 4);
+  --rcio-chip: max(32px, calc(var(--rcio-icon) + 8px));
+  --rcio-pad: calc((var(--rcio-chip) - var(--rcio-icon)) / 2);
+}
+
+/* Project chip (icon span + noWrap name) → icon only. Also hits RC's hidden
+   measuring copies, so its "fits in the row" count uses the icon width. */
+a.MuiButtonBase-root:not(.MuiButton-root):has(> span):has(> div > .MuiTypography-noWrap) {
+  gap: 0 !important;
+  min-width: 0 !important;
+  height: var(--rcio-chip) !important; /* RC fixes chips at 32px */
+  padding: var(--rcio-pad) !important;
+  border-radius: calc(var(--rcio-icon-radius) + var(--rcio-pad)) !important;
+}
+a.MuiButtonBase-root:not(.MuiButton-root):has(> span) > div:has(> .MuiTypography-noWrap) {
+  display: none !important;
+}
+a.MuiButtonBase-root:not(.MuiButton-root):has(> div > .MuiTypography-noWrap) > span {
+  display: flex !important;
+  margin: 0 !important;
+}
+a.MuiButtonBase-root:not(.MuiButton-root):has(> div > .MuiTypography-noWrap) > span > * {
+  width: var(--rcio-icon) !important;
+  height: var(--rcio-icon) !important;
+  margin: 0 !important; /* RC's 4px gap to the hidden name */
+  border-radius: var(--rcio-icon-radius) !important;
+  font-size: calc(var(--rcio-icon) * 0.45) !important;
+}
+
+/* Row: center everything; "N more projects" and All projects match the chip height.
+   (No :has() nested in :has() — Chrome drops the whole rule.) */
+.MuiStack-root:has(> .MuiBox-root > a.MuiButtonBase-root > div > .MuiTypography-noWrap) {
+  align-items: center !important;
+}
+.MuiStack-root:has(> .MuiBox-root > a.MuiButtonBase-root > div > .MuiTypography-noWrap) > button.MuiButtonBase-root,
+.MuiStack-root:has(> .MuiStack-root > .MuiBox-root > a.MuiButtonBase-root > div > .MuiTypography-noWrap) > .MuiBox-root > a.MuiButtonBase-root {
+  height: var(--rcio-chip) !important;
+  border-radius: calc(var(--rcio-icon-radius) + var(--rcio-pad)) !important;
+}
+
+/* Web project favicon on the letter avatar (image set inline by content.js). */
+.rcio-fav {
+  color: transparent !important;
+  background-color: transparent !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+}
+
+/* Load more under the All projects transactions table (transactions.js). */
+.rcx-more {
+  display: block;
+  margin: 12px auto 4px;
+  padding: 6px 16px;
+  border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+.rcx-more:hover:not(:disabled) { background: color-mix(in srgb, currentColor 8%, transparent); }
+.rcx-more:disabled { opacity: 0.6; cursor: default; }
+.rcx-letter {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 16px; height: 16px; border-radius: 4px;
+  background: color-mix(in srgb, currentColor 25%, transparent); font-size: 10px;
+}
+.rcx-trial-cell { flex-wrap: wrap !important; align-content: center; row-gap: 2px; }
+.rcx-trial { flex-basis: 100%; font-size: 12px; opacity: 0.7; white-space: nowrap; }
+.rcx-renew {
+  display: inline-block; margin-left: 8px; padding: 1px 8px; border-radius: 999px; corner-shape: superellipse(1.17);
+  font-size: 12px; line-height: 18px; white-space: nowrap; vertical-align: 1px;
+}
+.rcx-renew.rcx-on { color: #12a150; background: rgba(18, 161, 80, 0.12); }
+.rcx-renew.rcx-off { color: #e5484d; background: rgba(229, 72, 77, 0.12); }
+.rcx-renew.rcx-warn { color: #c27c0e; background: rgba(229, 160, 13, 0.16); }
+
+/* Revenue card currency button + menu (currency.js) */
+.rcx-cur {
+  padding: 1px 6px; border: 1px solid color-mix(in srgb, currentColor 22%, transparent); border-radius: 6px;
+  background: transparent; color: inherit; font: inherit; font-size: 12px; line-height: 18px; cursor: pointer; white-space: nowrap;
+}
+.rcx-cur:hover { background: color-mix(in srgb, currentColor 10%, transparent); }
+.rcx-menu {
+  position: fixed; z-index: 2147483000; width: 180px; max-height: 320px; overflow: auto; padding: 6px;
+  border: 1px solid color-mix(in srgb, currentColor 16%, transparent); border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35); font-size: 13px;
+}
+.rcx-menu-toggle { display: flex; align-items: center; gap: 8px; padding: 6px 8px; cursor: pointer; }
+.rcx-menu-sep { height: 1px; margin: 4px 0; background: color-mix(in srgb, currentColor 14%, transparent); }
+.rcx-menu-item {
+  display: block; width: 100%; padding: 6px 8px; border: 0; border-radius: 6px; background: none; color: inherit;
+  font: inherit; text-align: left; white-space: pre; cursor: pointer;
+}
+.rcx-menu-item:hover { background: color-mix(in srgb, currentColor 10%, transparent); }
+.rcx-menu-item.rcx-on { font-weight: 600; background: color-mix(in srgb, currentColor 14%, transparent); }
+
+/* Overview card: per-chart cumulative toggle + period label (overview.js) */
+.rcx-sigma {
+  width: 22px; height: 22px; margin: 0 8px 0 auto; padding: 0; border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  border-radius: 6px; background: transparent; color: inherit; font: inherit; font-size: 13px; line-height: 20px; cursor: pointer; opacity: 0.6;
+}
+.rcx-sigma:hover { opacity: 1; background: color-mix(in srgb, currentColor 10%, transparent); }
+.rcx-sigma.rcx-on { opacity: 1; color: #f2545b; border-color: #f2545b; }
+.rcx-period { cursor: pointer; text-decoration: underline dotted; text-underline-offset: 3px; }
+.rcx-period::after { content: ' ▾'; font-size: 0.85em; }
+/* Bigger hit areas for the card controls, so a near-miss doesn't open the chart behind them */
+.rcx-sigma, .rcx-cur, .rcx-period { position: relative; }
+.rcx-sigma::before, .rcx-cur::before, .rcx-period::before { content: ''; position: absolute; }
+/* header: up to the card's top edge, down to just above the number; Σ reaches well into the empty header */
+.rcx-sigma::before { inset: -17px -6px -14px -64px; }
+.rcx-cur::before { inset: -17px -17px -14px -4px; }
+.rcx-period::before { inset: -8px -6px -10px -17px; }
